@@ -19,7 +19,7 @@ router.put('/', async (req, res) => {
 
 	if (global.user) {
 		const { prodId, qty } = req.body;
-		if (!prodId || !qty) {
+		if (!prodId || typeof qty !== 'number') {
 			return res.status(400).json({
 				success: false,
 				message: 'prodId and qty are required',
