@@ -1,10 +1,10 @@
-import User from "../models/user";
+import User from "../models/user.js";
 import { generateUserId } from "../utils/utils.js";
 
 export async function createUser(username, password) {
-  const existingUser = await User.find({ username });
+  const existingUser = await User.findOne({ username });
   if (existingUser) {
-    throw new error("Username already taken");
+    throw new Error("Username already taken");
   }
   const user = await User.create({
     username,
