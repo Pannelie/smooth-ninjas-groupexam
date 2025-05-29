@@ -1,18 +1,31 @@
 import express from "express";
 import { createUser, getUser } from "../services/userServices.js";
-import User from "../models/user.js";
+import { generateUserId } from "../utils/utils.js";
 
 const router = express.Router();
 
 //registrera användare
 router.post("/register", async (req, res, next) => {
   const { username, password } = req.body;
-  try {
-    const newUser = await createUser(username, password);
-    res.status(201).json({ success: true, message: "user created successfully", user: newUser });
-  } catch (error) {
-    next(error);
-    // res.status(400).json({ success: false, error: error.message });
+  if (username && password) {
+    const user = await createUser({
+      username,
+      password,
+      userId: generateUserId(),
+    });
+    if (user) {
+      res.status(201).json({ success: true, message: `User created successfully` });
+    } else {
+      next({
+        status: 400,
+        message: `Registrering was not successful`,
+      });
+    }
+  } else {
+    next({
+      status: 400,
+      message: `Username and password are required`,
+    });
   }
 });
 
