@@ -5,6 +5,11 @@ import { v4 as uuid } from 'uuid';
 
 const router = express.Router();
 
+// PUT /api/cart
+// -  Creates a new cart if we have a logged in user without a cart.
+// or Adds the item to the cart if we have a cart from before
+// If its a guest we create a new cart if teh guests sends in its guestId in hte body
+// But if no guestId is sent with the PUT we create a new cart and guest with new id:s for both and send this back
 router.put('/', async (req, res) => {
 	if (!req.body) {
 		return res
