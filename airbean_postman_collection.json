@@ -1,0 +1,188 @@
+{
+	"info": {
+		"name": "Airbean API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Menu",
+			"item": [
+				{
+					"name": "GET /api/menu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/menu",
+							"protocol": "http",
+							"host": ["localhost", "8080"],
+							"path": ["api", "menu"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "GET /api/auth/logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/auth/logout",
+							"protocol": "http",
+							"host": ["localhost", "8080"],
+							"path": ["api", "auth", "logout"]
+						}
+					}
+				},
+				{
+					"name": "POST /api/auth/register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"<username>\",\n  \"password\": \"<password>\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/register",
+							"protocol": "http",
+							"host": ["localhost", "8080"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "POST /api/auth/login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"<username>\",\n  \"password\": \"<password>\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/login",
+							"protocol": "http",
+							"host": ["localhost", "8080"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "GET /api/cart",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/cart",
+							"protocol": "http",
+							"host": ["localhost", "8080"],
+							"path": ["api", "cart"]
+						}
+					}
+				},
+				{
+					"name": "PUT /api/cart",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"prodId\": \"<prodId>\",\n  \"qty\": <qty>\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/cart",
+							"protocol": "http",
+							"host": ["localhost", "8080"],
+							"path": ["api", "cart"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "GET /api/orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/orders",
+							"protocol": "http",
+							"host": ["localhost", "8080"],
+							"path": ["api", "orders"]
+						}
+					}
+				},
+				{
+					"name": "GET /api/orders/{userId}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/orders/{userId}",
+							"protocol": "http",
+							"host": ["localhost", "8080"],
+							"path": ["api", "orders", "{userId}"],
+							"variable": [
+								{
+									"key": "userId",
+									"description": "User ID to fetch orders for",
+									"value": "<userId>"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "POST /api/orders",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cartId\": \"<cartId>\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/orders",
+							"protocol": "http",
+							"host": ["localhost", "8080"],
+							"path": ["api", "orders"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
