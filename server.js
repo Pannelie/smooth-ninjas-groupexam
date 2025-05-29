@@ -1,10 +1,12 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import menuRouter from './routes/menuRouter.js';
-import authRouter from './routes/authRouter.js';
-import cartRouter from './routes/cartRouter.js';
-import ordersRouter from './routes/ordersRouter.js';
+import express from "express";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import menuRouter from "./routes/menuRouter.js";
+import authRouter from "./routes/authRouter.js";
+import cartRouter from "./routes/cartRouter.js";
+import ordersRouter from "./routes/ordersRouter.js";
+
+import errorHandler from "./middlewares/errorHandler.js";
 
 // Config
 dotenv.config();
@@ -17,16 +19,18 @@ const database = mongoose.connection;
 app.use(express.json());
 
 // Routes
-app.use('/api/menu', menuRouter);
-app.use('/api/auth', authRouter);
-app.use('/api/cart', cartRouter);
-app.use('/api/orders', ordersRouter);
+app.use("/api/menu", menuRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/orders", ordersRouter);
 
 //
-database.on('error', (error) => console.log(error));
-database.once('connected', () => {
-	console.log('DB Connected');
-	app.listen(PORT, () => {
-		console.log(`Server is running on port ${PORT}`);
-	});
+database.on("error", (error) => console.log(error));
+database.once("connected", () => {
+  console.log("DB Connected");
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
 });
+
+app.use(errorHandler);
