@@ -55,3 +55,13 @@ export async function getAllCarts() {
 		return null;
 	}
 }
+
+export async function removeCartById(cartId) {
+	try {
+		const result = Cart.findOneAndDelete({ cartId: cartId });
+		return result;
+	} catch (error) {
+		console.log(error.message);
+		return null;
+	}
+}
