@@ -7,18 +7,11 @@ const productSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	type: {
+	title: {
 		type: String,
-		required: true,
+		requiredW: true,
 	},
-	name: {
-		type: String,
-		required: true,
-	},
-	description: {
-		type: String,
-	},
-	baseUrl: {
+	desc: {
 		type: String,
 	},
 	price: {
