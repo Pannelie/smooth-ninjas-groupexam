@@ -13,3 +13,14 @@ export async function createUser(username, password) {
   });
   return { username: user.username, userId: user.userId };
 }
+
+export async function getUser(username) {
+  try {
+    const user = await User.findOne({ username: username });
+    if (user) return user;
+    else throw new Error(`No user found`);
+  } catch (error) {
+    console.error(error.message);
+    throw error;
+  }
+}
