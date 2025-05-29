@@ -6,8 +6,10 @@ export async function createUser(username, password) {
   if (existingUser) {
     throw new error("Username already taken");
   }
-  const user = new User.create({
+  const user = await User.create({
     username,
     password,
+    userId: generateUserId(),
   });
+  return { username: user.username, userId: user.userId };
 }
