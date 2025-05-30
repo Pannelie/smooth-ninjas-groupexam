@@ -20,3 +20,17 @@ export async function createOrder(cartId) {
 		throw error;
 	}
 }
+
+export async function getAllOrders() {
+	try {
+		const orders = await Order.find();
+		return orders;
+	} catch {
+		console.error(error.message);
+		throw error;
+	}
+}
+
+export async function getOrderByUserId(userId) {
+	return await Order.find({ userId });
+}

@@ -1,8 +1,14 @@
 import express from 'express';
-import { createOrder } from '../services/ordersServices.js';
+import { createOrder, getAllOrders, getOrderByUserId } from '../services/ordersServices.js';
 import { removeCartById } from '../services/cartServices.js';
 
 const router = express.Router();
+
+router.get('/', async (req, res) => {
+	const result = await getAllOrders();
+	if (result) return res.json({ success: true, orders: result });
+	else res.status(400).json({ success: false, message: 'Server error' });
+});
 
 router.post('/', async (req, res) => {
 	try {
@@ -19,6 +25,25 @@ router.post('/', async (req, res) => {
 	} catch (error) {
 		console.error(error.message);
 		return res.status(400).json({ success: false, message: error.message });
+	}
+});
+
+router.get('/:userId', async (req, res) => {
+	const { userId } = req.params;
+	
+	if (!userId) {
+		return res.status(400).json({ success: false, message: 'userId is required' });
+	}
+
+	try {
+		const orders = await getOrderByUserId(userId);
+		if (orders.length === 0) {
+			return res.status(404).json({ success: false, message: 'No orders found for this user' });
+		}
+		return res.json({ success: true, orders });
+	} catch (error) {
+		console.error(error.message);
+		return res.status(500).json({ success: false, message: 'Server error' });
 	}
 });
 
