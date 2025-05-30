@@ -57,7 +57,7 @@ router.put("/", async (req, res, next) => {
   } else {
     let { guestId, prodId, qty } = req.body;
     if (!prodId || typeof qty !== "number") {
-      return next ({status: 400, message: "prodId and qty are required" });
+      return next ({status: 404, message: "prodId and qty are required" });
     }
     const product = await getProduct(prodId);
     if (!product) {
