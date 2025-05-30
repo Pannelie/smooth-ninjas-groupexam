@@ -7,10 +7,11 @@ const router = express.Router();
 //logout
 router.get("/logout", (req, res, next) => {
   if (global.user) {
+    const loggedOutUser = global.user.username;
     global.user = null;
     res.json({
       success: true,
-      message: "Logout successful",
+      message: `Successfully logged out ${loggedOutUser}`,
     });
   } else {
     next({ status: 400, message: "No user logged in" });
@@ -31,7 +32,7 @@ router.post("/register", async (req, res, next) => {
     } else {
       next({
         status: 400,
-        message: `Registrering was not successful`,
+        message: `Registration was not successful`,
       });
     }
   } else {
