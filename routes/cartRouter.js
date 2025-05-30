@@ -16,7 +16,7 @@ router.get("/:cartId", async (req, res, next) => {
   const cartId = req.params.cartId;
 
   if (!cartId) {
-    return next({ status: 400, message: `Missing cart ID in request – cannot fetch cart for ${global.user?.username || "guest"}` });
+    next({ status: 400, message: `Missing cart ID in request – cannot fetch cart for ${global.user?.username || "guest"}` });
   }
 
   console.log(cartId);
@@ -25,7 +25,7 @@ router.get("/:cartId", async (req, res, next) => {
   if (cart && cart.length > 0) {
     return res.status(200).json({ success: true, message: `Fetched cart for ${global.user?.username || "guest"}`, cart });
   } else {
-    return next({ status: 404, message: `No cart found for ${global.user?.username || "guest"}` });
+    next({ status: 404, message: `No cart found for ${global.user?.username || "guest"}` });
   }
 });
 
@@ -36,17 +36,17 @@ router.get("/:cartId", async (req, res, next) => {
 // But if no guestId is sent with the PUT we create a new cart and guest with new id:s for both and send this back
 router.put("/", async (req, res, next) => {
   if (!req.body) {
-    return next ({status: 400, message: "No request body provided" });
+    next ({status: 400, message: "No request body provided" });
   }
 
   if (global.user) {
     const { prodId, qty } = req.body;
     if (!prodId || typeof qty !== "number") {
-      return next ({status: 400, message: "prodId and qty are required" });
+      next ({status: 400, message: "prodId and qty are required" });
     }
     const product = await getProduct(prodId);
     if (!product) {
-      return next ({status: 404, message: "Product not found" });
+      next ({status: 404, message: "Product not found" });
     }
     const result = await updateCart(global.user.userId, {
       prodId: prodId,
@@ -57,11 +57,11 @@ router.put("/", async (req, res, next) => {
   } else {
     let { guestId, prodId, qty } = req.body;
     if (!prodId || typeof qty !== "number") {
-      return next ({status: 400, message: "prodId and qty are required" });
+      next ({status: 400, message: "prodId and qty are required" });
     }
     const product = await getProduct(prodId);
     if (!product) {
-      return next ({status: 404, message: "prodId and qty are required" });
+      next ({status: 404, message: "prodId and qty are required" });
     }
     // Om det inte finns något guestId medskickat i body - skapa ett!
     if (!guestId) {
