@@ -1,7 +1,8 @@
 import express, { json } from "express";
 import { getProduct } from "../services/productServices.js";
-import { getAllCarts, updateCart } from "../services/cartServices.js";
+import { getAllCarts, getCartByCartId, updateCart } from "../services/cartServices.js";
 import { v4 as uuid } from "uuid";
+import Cart from "../models/cart.js";
 
 const router = express.Router();
 
@@ -12,7 +13,20 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:cartId", async (req, res, next) => {
-  const result = await getAllCarts({ cartId: userId });
+  const cartId = req.params.cartId;
+
+  if (!cartId) {
+    return next({ status: 400, message: `Could not find cart for ${global.user?.username || "guest"}` });
+  }
+
+  console.log(cartId);
+
+  const cart = await getCartByCartId(cartId);
+  if (cart && cart.length > 0) {
+    return res.status(200).json({ success: true, message: `Fetched cart for ${global.user?.username || "guest"}`, cart });
+  } else {
+    next({ status: 404, message: `No cart found` });
+  }
 });
 
 // PUT /api/cart

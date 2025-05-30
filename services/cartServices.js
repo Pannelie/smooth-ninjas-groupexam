@@ -56,10 +56,10 @@ export async function getAllCarts() {
   }
 }
 
-export async function getCartByUserId(userId) {
+export async function getCartByCartId(cartId) {
   try {
-    const carts = await Cart.find({ cartId: userId });
-    return carts;
+    const cart = await Cart.find({ cartId: cartId });
+    return cart;
   } catch (error) {
     console.log(error.message);
     return null;
