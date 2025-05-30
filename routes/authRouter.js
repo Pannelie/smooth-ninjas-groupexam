@@ -4,7 +4,21 @@ import { generateUserId } from "../utils/utils.js";
 
 const router = express.Router();
 
-//registrera användare
+//logout
+router.get("/logout", (req, res, next) => {
+  if (global.user) {
+    const loggedOutUser = global.user.username;
+    global.user = null;
+    res.json({
+      success: true,
+      message: `Successfully logged out ${loggedOutUser}`,
+    });
+  } else {
+    next({ status: 400, message: "No user logged in" });
+  }
+});
+
+//register user
 router.post("/register", async (req, res, next) => {
   const { username, password } = req.body;
   if (username && password) {
@@ -18,7 +32,7 @@ router.post("/register", async (req, res, next) => {
     } else {
       next({
         status: 400,
-        message: `Registrering was not successful`,
+        message: `Registration was not successful`,
       });
     }
   } else {
@@ -29,7 +43,7 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
-//logga in användare
+//login user
 router.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
   if (username && password) {
