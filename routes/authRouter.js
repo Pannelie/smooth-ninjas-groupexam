@@ -20,7 +20,7 @@ router.get("/logout", (req, res, next) => {
 
 //register user
 router.post("/register", async (req, res, next) => {
-  const { username, password, role = "guest" } = req.body;
+  const { username, password, role = "user" } = req.body;
   if (username && password) {
     const user = await createUser({
       username,

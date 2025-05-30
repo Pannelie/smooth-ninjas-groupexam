@@ -1,11 +1,13 @@
 import Cart from "../models/cart.js";
+import { generateCartId, generateCartIdFromUserId } from "../utils/utils.js";
 
 async function getOrCreateCart(userId) {
   try {
-    let cart = await Cart.findOne({ cartId: userId });
+    const cartId = generateCartId(userId);
+    let cart = await Cart.findOne({ cartId });
     if (!cart) {
       cart = await Cart.create({
-        cartId: userId,
+        cartId,
         items: [],
       });
     }

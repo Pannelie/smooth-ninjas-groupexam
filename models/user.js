@@ -19,8 +19,8 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     //enum betyder att det är endast dessa värden som är tillåtna, inget annat
-    enum: ["guest", "admin"],
-    default: "guest",
+    enum: ["guest", "user", "admin"],
+    default: "user",
     required: true,
   },
 });
