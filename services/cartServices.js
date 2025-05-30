@@ -1,5 +1,5 @@
 import Cart from "../models/cart.js";
-import { generateCartId, generateCartIdFromUserId } from "../utils/utils.js";
+import { generateCartId } from "../utils/utils.js";
 
 async function getOrCreateCart(userId) {
   try {
