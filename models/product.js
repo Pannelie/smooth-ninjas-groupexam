@@ -11,6 +11,7 @@ const productSchema = new Schema({
   title: {
     type: String,
     required: true,
+    unique: true,
   },
   desc: {
     type: String,
@@ -18,6 +19,7 @@ const productSchema = new Schema({
   price: {
     type: Number,
     required: true,
+    min: [0, "Price cannot be negative"],
   },
 });
 
