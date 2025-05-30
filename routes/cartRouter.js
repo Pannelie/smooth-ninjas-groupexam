@@ -11,6 +11,10 @@ router.get("/", async (req, res) => {
   else res.status(400).json({ success: false, message: "Server error" });
 });
 
+router.get("/:cartId", async (req, res, next) => {
+  const result = await getAllCarts({ cartId: userId });
+});
+
 // PUT /api/cart
 // -  Creates a new cart if we have a logged in user without a cart.
 // or Adds the item to the cart if we have a cart from before
