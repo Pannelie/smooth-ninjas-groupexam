@@ -1,8 +1,14 @@
 import express from 'express';
-import { createOrder } from '../services/ordersServices.js';
+import { createOrder, getAllOrders } from '../services/ordersServices.js';
 import { removeCartById } from '../services/cartServices.js';
 
 const router = express.Router();
+
+router.get('/', async (req, res) => {
+	const result = await getAllOrders();
+	if (result) return res.json({ success: true, orders: result });
+	else res.status(400).json({ success: false, message: 'Server error' });
+});
 
 router.post('/', async (req, res) => {
 	try {

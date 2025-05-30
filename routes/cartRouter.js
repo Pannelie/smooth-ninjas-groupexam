@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { json } from 'express';
 import { getProduct } from '../services/productServices.js';
 import { getAllCarts, updateCart } from '../services/cartServices.js';
 import { v4 as uuid } from 'uuid';
@@ -68,7 +68,8 @@ router.put('/', async (req, res) => {
 
 router.get('/', async (req, res) => {
 	const result = await getAllCarts();
-	return res.json({ success: true, carts: result });
+	if (result) return res.json({ success: true, carts: result });
+	else res.status(400).json({ success: false, message: 'Server error' });
 });
 
 export default router;
