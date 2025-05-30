@@ -8,7 +8,7 @@ router.get('/', async (req, res, next) => {
 	try {
 		const result = await getAllOrders();
 		if (!result) {
-			next({ status: 404, message: 'No orders found' });
+			return next({ status: 404, message: 'No orders found' });
 		}
 		res.json({ success: true, orders: result });
 	} catch (error) {
@@ -20,7 +20,7 @@ router.post('/', async (req, res, next) => {
 	try {
 		const { cartId } = req.body;
 		if (!cartId) {
-			next({ status: 400, message: 'cartId is required' });
+			return next({ status: 400, message: 'cartId is required' });
 		}
 		const order = await createOrder(cartId);
 		const result = await removeCartById(cartId);
@@ -42,7 +42,7 @@ router.get('/:userId', async (req, res, next) => {
 	try {
 		const orders = await getOrderByUserId(userId);
 		if (orders.length === 0) {
-			next({ status: 400, success: false, message: 'No orders found for this user' });
+			return next({ status: 400, success: false, message: 'No orders found for this user' });
 		}
 		return res.json({ success: true, orders });
 	} catch (error) {
