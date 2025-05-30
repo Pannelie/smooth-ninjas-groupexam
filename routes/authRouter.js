@@ -52,7 +52,7 @@ router.post("/login", async (req, res, next) => {
     if (user) {
       if (user.password === password) {
         global.user = user;
-        res.status(200).json({ success: true, message: `Logged in ${user.username} successfully` });
+        res.status(200).json({ success: true, message: `Logged in ${user.username} successfully`, userId: user.userId, role: user.role });
       } else {
         next({ status: 400, message: `Wrong username or password` });
       }
