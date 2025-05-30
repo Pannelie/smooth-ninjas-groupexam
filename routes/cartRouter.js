@@ -2,7 +2,6 @@ import express, { json } from "express";
 import { getProduct } from "../services/productServices.js";
 import { getAllCarts, getCartByCartId, updateCart } from "../services/cartServices.js";
 import { v4 as uuid } from "uuid";
-import Cart from "../models/cart.js";
 
 const router = express.Router();
 
