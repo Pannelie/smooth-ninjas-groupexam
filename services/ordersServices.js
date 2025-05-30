@@ -30,3 +30,7 @@ export async function getAllOrders() {
 		throw error;
 	}
 }
+
+export async function getOrderByUserId(userId) {
+	return await Order.find({ userId });
+}
