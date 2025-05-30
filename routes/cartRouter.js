@@ -12,11 +12,12 @@ router.get("/", async (req, res) => {
   else res.status(400).json({ success: false, message: "Server error" });
 });
 
+// GET cart by cartId, ändra cartId så de heter cart-xxxxx? kan baseras på userId-xxxxx med substring förslagsvis
 router.get("/:cartId", async (req, res, next) => {
   const cartId = req.params.cartId;
 
   if (!cartId) {
-    return next({ status: 400, message: `Could not find cart for ${global.user?.username || "guest"}` });
+    return next({ status: 400, message: `Missing cart ID in request – cannot fetch cart for ${global.user?.username || "guest"}` });
   }
 
   console.log(cartId);
@@ -25,7 +26,7 @@ router.get("/:cartId", async (req, res, next) => {
   if (cart && cart.length > 0) {
     return res.status(200).json({ success: true, message: `Fetched cart for ${global.user?.username || "guest"}`, cart });
   } else {
-    next({ status: 404, message: `No cart found` });
+    next({ status: 404, message: `No cart found for ${global.user?.username || "guest"}` });
   }
 });
 

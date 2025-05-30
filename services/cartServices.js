@@ -16,6 +16,26 @@ async function getOrCreateCart(userId) {
   }
 }
 
+export async function getAllCarts() {
+  try {
+    const carts = await Cart.find();
+    return carts;
+  } catch (error) {
+    console.log(error.message);
+    return null;
+  }
+}
+
+export async function getCartByCartId(cartId) {
+  try {
+    const cart = await Cart.find({ cartId: cartId });
+    return cart;
+  } catch (error) {
+    console.log(error.message);
+    return null;
+  }
+}
+
 export async function updateCart(userId, product) {
   try {
     const cart = await getOrCreateCart(userId);
@@ -39,26 +59,6 @@ export async function updateCart(userId, product) {
     }
 
     await cart.save();
-    return cart;
-  } catch (error) {
-    console.log(error.message);
-    return null;
-  }
-}
-
-export async function getAllCarts() {
-  try {
-    const carts = await Cart.find();
-    return carts;
-  } catch (error) {
-    console.log(error.message);
-    return null;
-  }
-}
-
-export async function getCartByCartId(cartId) {
-  try {
-    const cart = await Cart.find({ cartId: cartId });
     return cart;
   } catch (error) {
     console.log(error.message);
