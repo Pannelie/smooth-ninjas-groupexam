@@ -22,8 +22,12 @@ router.get("/:cartId", async (req, res, next) => {
   console.log(cartId);
 
   const cart = await getCartByCartId(cartId);
-  if (cart && cart.length > 0) {
-    return res.status(200).json({ success: true, message: `Fetched cart for ${global.user?.username || "guest"}`, cart });
+  if (cart) {
+    const totalPrice = cart.items.reduce((sum, item) => {
+      return sum + item.price * item.qty;
+    }, 0);
+
+    return res.status(200).json({ success: true, message: `Fetched cart for ${global.user?.username || "guest"}`, cart, totalPrice });
   } else {
     return next({ status: 404, message: `No cart found for ${global.user?.username || "guest"}` });
   }
@@ -42,11 +46,11 @@ router.put("/", async (req, res, next) => {
   if (global.user) {
     const { prodId, qty } = req.body;
     if (!prodId || typeof qty !== "number") {
-      return next ({status: 400, message: "prodId and qty are required" });
+      return next({ status: 400, message: "prodId and qty are required" });
     }
     const product = await getProduct(prodId);
     if (!product) {
-      return next ({status: 404, message: "Product not found" });
+      return next({ status: 404, message: "Product not found" });
     }
     const result = await updateCart(global.user.userId, {
       prodId: prodId,
@@ -57,11 +61,11 @@ router.put("/", async (req, res, next) => {
   } else {
     let { guestId, prodId, qty } = req.body;
     if (!prodId || typeof qty !== "number") {
-      return next ({status: 404, message: "prodId and qty are required" });
+      return next({ status: 404, message: "prodId and qty are required" });
     }
     const product = await getProduct(prodId);
     if (!product) {
-      return next ({status: 404, message: "prodId and qty are required" });
+      return next({ status: 404, message: "prodId and qty are required" });
     }
     // Om det inte finns något guestId medskickat i body - skapa ett!
     if (!guestId) {

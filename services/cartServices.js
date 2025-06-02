@@ -1,11 +1,13 @@
 import Cart from "../models/cart.js";
+import { generateCartId } from "../utils/utils.js";
 
 async function getOrCreateCart(userId) {
   try {
-    let cart = await Cart.findOne({ cartId: userId });
+    const cartId = generateCartId(userId);
+    let cart = await Cart.findOne({ cartId });
     if (!cart) {
       cart = await Cart.create({
-        cartId: userId,
+        cartId,
         items: [],
       });
     }
@@ -28,7 +30,7 @@ export async function getAllCarts() {
 
 export async function getCartByCartId(cartId) {
   try {
-    const cart = await Cart.find({ cartId: cartId });
+    const cart = await Cart.findOne({ cartId });
     return cart;
   } catch (error) {
     console.log(error.message);
