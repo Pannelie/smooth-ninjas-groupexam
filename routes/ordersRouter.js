@@ -5,6 +5,7 @@ import {
 	getOrderByUserId,
 } from '../services/ordersServices.js';
 import { removeCartById } from '../services/cartServices.js';
+import { validateCartId } from '../middlewares/validators.js';
 
 const router = express.Router();
 
@@ -21,7 +22,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // this creates a order from a cart
-router.post('/', async (req, res, next) => {
+router.post('/', validateCartId, async (req, res, next) => {
 	try {
 		const { cartId } = req.body;
 		if (!cartId) {
