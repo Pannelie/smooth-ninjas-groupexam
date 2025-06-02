@@ -9,7 +9,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   const result = await getAllCarts();
   if (result) {
-    return res.json({ success: true, carts: result });
+    return res.status(200).json({ success: true, carts: result });
   } else {
     return next({ status: 404, message: "Server error" });
   }
