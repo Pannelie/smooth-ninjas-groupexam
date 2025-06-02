@@ -30,6 +30,6 @@ export function validateCartId(req, res, next) {
       message: `Cart ID is required`,
     });
   }
-  
+  console.log(`validated cartId`);
   next();
 }
