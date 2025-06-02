@@ -10,7 +10,7 @@ router.get("/logout", (req, res, next) => {
   if (global.user) {
     const loggedOutUser = global.user.username;
     global.user = null;
-    res.json({
+    res.status(200).json({
       success: true,
       message: `Successfully logged out ${loggedOutUser}`,
     });

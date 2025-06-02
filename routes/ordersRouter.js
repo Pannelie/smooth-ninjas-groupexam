@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", async (req, res, next) => {
   const result = await getAllOrders();
   if (result) {
-    res.json({ success: true, orders: result });
+    res.status(200).json({ success: true, orders: result });
   } else {
     return next({ status: 404, message: "No orders found" });
   }
@@ -33,7 +33,7 @@ router.get("/:userId", validateUserId, async (req, res, next) => {
 
   const orders = await getOrderByUserId(userId);
   if (orders && orders.length > 0) {
-    return res.json({ success: true, orders });
+    return res.status(200).json({ success: true, orders });
   } else {
     return next({
       status: 400,
