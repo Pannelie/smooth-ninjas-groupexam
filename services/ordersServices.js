@@ -8,8 +8,11 @@ export async function createOrder(cartId) {
 		if (!cart || cart.items.length === 0) {
 			throw new Error('Cart not found or empty');
 		}
+
+		const userId = cartId.replace(/^cart-/, 'user-');
+
 		const order = await Order.create({
-			userId: cartId,
+			userId: userId,
 			orderId: generateOrderId(),
 			items: cart.items,
 		});

@@ -1,5 +1,9 @@
 import express from 'express';
-import { createOrder, getAllOrders, getOrderByUserId } from '../services/ordersServices.js';
+import {
+	createOrder,
+	getAllOrders,
+	getOrderByUserId,
+} from '../services/ordersServices.js';
 import { removeCartById } from '../services/cartServices.js';
 
 const router = express.Router();
@@ -16,6 +20,7 @@ router.get('/', async (req, res, next) => {
 	}
 });
 
+// this creates a order from a cart
 router.post('/', async (req, res, next) => {
 	try {
 		const { cartId } = req.body;
@@ -28,21 +33,29 @@ router.post('/', async (req, res, next) => {
 		return res.status(201).json({ success: true, order });
 	} catch (error) {
 		console.error(error.message);
-		next (error)
+		next(error);
 	}
 });
 
 router.get('/:userId', async (req, res, next) => {
 	const { userId } = req.params;
-	
+
 	if (!userId) {
-		return next({ status: 400, success: false, message: 'userId is required' });
+		return next({
+			status: 400,
+			success: false,
+			message: 'userId is required',
+		});
 	}
 
 	try {
 		const orders = await getOrderByUserId(userId);
 		if (orders.length === 0) {
-			return next({ status: 400, success: false, message: 'No orders found for this user' });
+			return next({
+				status: 400,
+				success: false,
+				message: 'No orders found for this user',
+			});
 		}
 		return res.json({ success: true, orders });
 	} catch (error) {
