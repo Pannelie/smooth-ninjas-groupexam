@@ -10,12 +10,12 @@ router.get("/logout", (req, res, next) => {
   if (global.user) {
     const loggedOutUser = global.user.username;
     global.user = null;
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: `Successfully logged out ${loggedOutUser}`,
     });
   } else {
-    next({ status: 400, message: "No user logged in" });
+    return next({ status: 400, message: "No user logged in" });
   }
 });
 
@@ -30,9 +30,9 @@ router.post("/register", validateAuthData, async (req, res, next) => {
     role,
   });
   if (user) {
-    res.status(201).json({ success: true, message: `User created successfully` });
+    return res.status(201).json({ success: true, message: `User created successfully` });
   } else {
-    next({
+    return next({
       status: 400,
       message: `Registration was not successful`,
     });
@@ -47,12 +47,14 @@ router.post("/login", validateAuthData, async (req, res, next) => {
   if (user) {
     if (user.password === password) {
       global.user = user;
-      res.status(200).json({ success: true, message: `Logged in ${user.username} successfully`, userId: user.userId, role: user.role });
+      return res
+        .status(200)
+        .json({ success: true, message: `Logged in ${user.username} successfully`, userId: user.userId, role: user.role });
     } else {
-      next({ status: 400, message: `Wrong username or password` });
+      return next({ status: 400, message: `Wrong username or password` });
     }
   } else {
-    next({ status: 400, message: `No user found` });
+    return next({ status: 400, message: `No user found` });
   }
 });
 

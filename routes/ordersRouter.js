@@ -24,7 +24,7 @@ router.post("/", validateCartId, async (req, res, next) => {
     console.log(`Order created by user:${cartId}, their cart is removed`);
     return res.status(201).json({ success: true, order });
   } else {
-    next({ status: 400, message: `Order could not be created` });
+    return next({ status: 400, message: `Order could not be created` });
   }
 });
 
