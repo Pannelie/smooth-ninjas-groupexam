@@ -8,3 +8,14 @@ export function validateAuthData(req, res, next) {
   }
   next();
 }
+
+export function validateUserId(req, res, next) {
+  const { userId } = req.params;
+  if (!userId) {
+    return next({
+      status: 400,
+      message: "userId is required",
+    });
+  }
+  next();
+}
