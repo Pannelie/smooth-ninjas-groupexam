@@ -7,8 +7,11 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   const result = await getAllCarts();
-  if (result) return res.json({ success: true, carts: result });
-  else res.status(400).json({ message: "Server error" });
+  if (result) {
+    return res.json({ success: true, carts: result });
+  } else {
+    return next({ status: 404, message: "Server error" });
+  }
 });
 
 // GET cart by cartId, ändra cartId så de heter cart-xxxxx? kan baseras på userId-xxxxx med substring förslagsvis

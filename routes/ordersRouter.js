@@ -53,7 +53,6 @@ router.get('/:userId', async (req, res, next) => {
 		if (orders.length === 0) {
 			return next({
 				status: 400,
-				success: false,
 				message: 'No orders found for this user',
 			});
 		}
