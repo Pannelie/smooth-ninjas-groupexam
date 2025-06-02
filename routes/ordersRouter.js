@@ -6,14 +6,11 @@ import { validateCartId, validateUserId } from "../middlewares/validators.js";
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
-  try {
-    const result = await getAllOrders();
-    if (!result) {
-      return next({ status: 404, message: "No orders found" });
-    }
+  const result = await getAllOrders();
+  if (result) {
     res.json({ success: true, orders: result });
-  } catch (error) {
-    next(error);
+  } else {
+    return next({ status: 404, message: "No orders found" });
   }
 });
 
