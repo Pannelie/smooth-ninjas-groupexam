@@ -19,7 +19,7 @@ router.get("/logout", (req, res, next) => {
   }
 });
 
-//register user
+// register user
 router.post("/register", validateAuthData, async (req, res, next) => {
   const { username, password, role = "user" } = req.body;
   // if (username && password) {
