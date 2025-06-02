@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", async (req, res, next) => {
   const result = await getAllOrders();
   if (result) {
-    res.status(200).json({ success: true, orders: result });
+    return res.status(200).json({ success: true, orders: result });
   } else {
     return next({ status: 404, message: "No orders found" });
   }
