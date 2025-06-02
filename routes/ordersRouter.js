@@ -31,18 +31,14 @@ router.post("/", validateCartId, async (req, res, next) => {
 router.get("/:userId", validateUserId, async (req, res, next) => {
   const { userId } = req.params;
 
-  try {
-    const orders = await getOrderByUserId(userId);
-    if (orders.length === 0) {
-      return next({
-        status: 400,
-        message: "No orders found for this user",
-      });
-    }
+  const orders = await getOrderByUserId(userId);
+  if (orders && orders.length > 0) {
     return res.json({ success: true, orders });
-  } catch (error) {
-    console.error(error.message);
-    next(error);
+  } else {
+    return next({
+      status: 400,
+      message: "No orders found for this user",
+    });
   }
 });
 
