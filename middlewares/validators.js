@@ -21,3 +21,15 @@ export function validateUserId(req, res, next) {
   console.log(`validated userId`);
   next();
 }
+
+export function validateCartId(req, res, next) {
+  const { cartId } = req.body;
+  if (!cartId) {
+    return next({
+      status: 400,
+      message: `Cart ID is required`,
+    });
+  }
+  
+  next();
+}
