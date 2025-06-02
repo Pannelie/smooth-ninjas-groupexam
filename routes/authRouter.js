@@ -1,6 +1,7 @@
 import express from "express";
 import { createUser, getUser } from "../services/userServices.js";
 import { generateUserId } from "../utils/utils.js";
+import { validateAuthData } from "../middlewares/validators.js";
 
 const router = express.Router();
 
@@ -19,52 +20,52 @@ router.get("/logout", (req, res, next) => {
 });
 
 //register user
-router.post("/register", async (req, res, next) => {
+router.post("/register", validateAuthData, async (req, res, next) => {
   const { username, password, role = "user" } = req.body;
-  if (username && password) {
-    const user = await createUser({
-      username,
-      password,
-      userId: generateUserId(),
-      role,
-    });
-    if (user) {
-      res.status(201).json({ success: true, message: `User created successfully` });
-    } else {
-      next({
-        status: 400,
-        message: `Registration was not successful`,
-      });
-    }
+  // if (username && password) {
+  const user = await createUser({
+    username,
+    password,
+    userId: generateUserId(),
+    role,
+  });
+  if (user) {
+    res.status(201).json({ success: true, message: `User created successfully` });
   } else {
     next({
       status: 400,
-      message: `Username and password are required`,
+      message: `Registration was not successful`,
     });
   }
+  // } else {
+  //   next({
+  //     status: 400,
+  //     message: `Username and password are required`,
+  //   });
+  // }
 });
 
 //login user
-router.post("/login", async (req, res, next) => {
+router.post("/login", validateAuthData, async (req, res, next) => {
   const { username, password } = req.body;
-  if (username && password) {
-    const user = await getUser(username);
-    if (user) {
-      if (user.password === password) {
-        global.user = user;
-        res.status(200).json({ success: true, message: `Logged in ${user.username} successfully`, userId: user.userId, role: user.role });
-      } else {
-        next({ status: 400, message: `Wrong username or password` });
-      }
+  // if (username && password) {
+  const user = await getUser(username);
+  if (user) {
+    if (user.password === password) {
+      global.user = user;
+      res.status(200).json({ success: true, message: `Logged in ${user.username} successfully`, userId: user.userId, role: user.role });
     } else {
-      next({ status: 400, message: `No user found` });
+      next({ status: 400, message: `Wrong username or password` });
     }
   } else {
-    next({
-      status: 400,
-      message: `Username and password are required`,
-    });
+    next({ status: 400, message: `No user found` });
   }
+  // } else {
+  //   next({
+  //     status: 400,
+  //     message: `Username and password are required`,
+  //   });
+  // }
 });
 
 export default router;
