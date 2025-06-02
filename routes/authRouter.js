@@ -22,7 +22,7 @@ router.get("/logout", (req, res, next) => {
 // register user
 router.post("/register", validateAuthData, async (req, res, next) => {
   const { username, password, role = "user" } = req.body;
-  // if (username && password) {
+
   const user = await createUser({
     username,
     password,
@@ -37,18 +37,12 @@ router.post("/register", validateAuthData, async (req, res, next) => {
       message: `Registration was not successful`,
     });
   }
-  // } else {
-  //   next({
-  //     status: 400,
-  //     message: `Username and password are required`,
-  //   });
-  // }
 });
 
 //login user
 router.post("/login", validateAuthData, async (req, res, next) => {
   const { username, password } = req.body;
-  // if (username && password) {
+
   const user = await getUser(username);
   if (user) {
     if (user.password === password) {
@@ -60,12 +54,6 @@ router.post("/login", validateAuthData, async (req, res, next) => {
   } else {
     next({ status: 400, message: `No user found` });
   }
-  // } else {
-  //   next({
-  //     status: 400,
-  //     message: `Username and password are required`,
-  //   });
-  // }
 });
 
 export default router;
