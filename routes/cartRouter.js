@@ -1,6 +1,6 @@
 import express, { json } from "express";
 import { getProduct } from "../services/productServices.js";
-import { getAllCarts, getCartByCartId, updateCart } from "../services/cartServices.js";
+import { getAllCarts, getCartByCartId, updateCart, campaignCartFree } from "../services/cartServices.js";
 import { v4 as uuid } from "uuid";
 
 const router = express.Router();
@@ -40,7 +40,7 @@ router.get("/:cartId", async (req, res, next) => {
 // But if no guestId is sent with the PUT we create a new cart and guest with new id:s for both and send this back
 router.put("/", async (req, res, next) => {
   if (!req.body) {
-    return next({ status: 400, message: "No request body provided" });
+    return next ({status: 400, message: "No request body provided" });
   }
 
   if (global.user) {
@@ -77,6 +77,26 @@ router.put("/", async (req, res, next) => {
       qty: qty,
     });
     return res.status(201).json({ success: true, guestId: guestId, cart: result });
+  }
+});
+
+router.get("/:userId/campaign", async (req, res, next) => {
+  const userId = req.params.userId;
+
+  if (!userId) {
+    return next({ status: 400, message: "Missing user ID in request" });
+  }
+
+  try {
+    const result = await campaignCartFree(userId);
+    if (result) {
+      return res.status(200).json({ success: true, message: `Campaign applied for user ${userId}`, cart: result });
+    } else {
+      return next({ status: 404, message: `No cart found for user ${userId}` });
+    }
+  } catch (error) {
+    console.error(error.message);
+    next(error);
   }
 });
 
