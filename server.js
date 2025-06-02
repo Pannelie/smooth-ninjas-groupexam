@@ -7,6 +7,7 @@ import cartRouter from "./routes/cartRouter.js";
 import ordersRouter from "./routes/ordersRouter.js";
 
 import errorHandler from "./middlewares/errorHandler.js";
+import logger from "./middlewares/logger.js";
 
 // Config
 dotenv.config();
@@ -17,6 +18,7 @@ const database = mongoose.connection;
 
 // Middlewares
 app.use(express.json());
+app.use(logger());
 
 // Routes
 app.use("/api/menu", menuRouter);
