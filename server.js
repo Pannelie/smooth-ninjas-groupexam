@@ -26,7 +26,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/orders", ordersRouter);
 
-//
+//DB EmitEvents
 database.on("error", (error) => console.log(error));
 database.once("connected", () => {
   console.log("DB Connected");
