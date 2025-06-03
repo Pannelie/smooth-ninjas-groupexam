@@ -16,6 +16,7 @@ const cartSchema = new Schema({
     unique: true,
   },
   items: { type: [cartItemSchema], default: [], required: true },
+  totalPrice: { type: Number, required: true, min: [0, "Total price cannot be negative"] },
 });
 
 const Cart = mongoose.model("Cart", cartSchema);

@@ -21,7 +21,18 @@ async function getOrCreateCart(userId) {
 export async function getAllCarts() {
   try {
     const carts = await Cart.find();
-    return carts;
+    const cartDetails = carts.map((cart) => {
+      const totalPrice = cart.items.reduce((sum, item) => {
+        return sum + item.price * item.qty;
+      }, 0);
+      return {
+        cartId: cart.cartId,
+        items: cart.items,
+        totalPrice,
+      };
+    });
+
+    return cartDetails;
   } catch (error) {
     console.log(error.message);
     return null;
@@ -58,6 +69,7 @@ export async function updateCart(userId, product) {
       console.log("Removes item from cart!");
       cart.items = cart.items.filter((i) => i.prodId !== product.prodId);
     }
+
     await cart.save();
     return cart;
   } catch (error) {
