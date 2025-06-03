@@ -1,54 +1,44 @@
 import express from "express";
 import { createOrder, getAllOrders, getOrderByUserId } from "../services/ordersServices.js";
 import { removeCartById } from "../services/cartServices.js";
-import { validateUserId } from "../middlewares/validators.js";
+import { validateCartId, validateUserId } from "../middlewares/validators.js";
 
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
-  try {
-    const result = await getAllOrders();
-    if (!result) {
-      return next({ status: 404, message: "No orders found" });
-    }
-    res.json({ success: true, orders: result });
-  } catch (error) {
-    next(error);
+  const result = await getAllOrders();
+  if (result) {
+    return res.status(200).json({ success: true, orders: result });
+  } else {
+    return next({ status: 404, message: "No orders found" });
   }
 });
 
 // this creates a order from a cart
-router.post("/", async (req, res, next) => {
-  try {
-    const { cartId } = req.body;
-    if (!cartId) {
-      return next({ status: 400, message: "cartId is required" });
-    }
-    const order = await createOrder(cartId);
-    const result = await removeCartById(cartId);
+router.post("/", validateCartId, async (req, res, next) => {
+  const { cartId } = req.body;
+
+  const order = await createOrder(cartId);
+  if (order) {
+    await removeCartById(cartId);
     console.log(`Order created by user:${cartId}, their cart is removed`);
     return res.status(201).json({ success: true, order });
-  } catch (error) {
-    console.error(error.message);
-    next(error);
+  } else {
+    return next({ status: 400, message: `Order could not be created` });
   }
 });
 
 router.get("/:userId", validateUserId, async (req, res, next) => {
   const { userId } = req.params;
 
-  try {
-    const orders = await getOrderByUserId(userId);
-    if (orders.length === 0) {
-      return next({
-        status: 400,
-        message: "No orders found for this user",
-      });
-    }
-    return res.json({ success: true, orders });
-  } catch (error) {
-    console.error(error.message);
-    next(error);
+  const orders = await getOrderByUserId(userId);
+  if (orders && orders.length > 0) {
+    return res.status(200).json({ success: true, orders });
+  } else {
+    return next({
+      status: 400,
+      message: "No orders found for this user",
+    });
   }
 });
 

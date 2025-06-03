@@ -2,13 +2,15 @@ import express, { json } from "express";
 import { getProduct } from "../services/productServices.js";
 import { getAllCarts, getCartByCartId, updateCart, campaignCartFree } from "../services/cartServices.js";
 import { v4 as uuid } from "uuid";
+import { validateProductBody } from "../middlewares/validators.js";
+import { validateUserId } from "../middlewares/validators.js";
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   const result = await getAllCarts();
   if (result) {
-    return res.json({ success: true, carts: result });
+    return res.status(200).json({ success: true, carts: result });
   } else {
     return next({ status: 404, message: "Server error" });
   }
@@ -19,7 +21,10 @@ router.get("/:cartId", async (req, res, next) => {
   const cartId = req.params.cartId;
 
   if (!cartId) {
-    return next({ status: 400, message: `Missing cart ID in request – cannot fetch cart for ${global.user?.username || "guest"}` });
+    return next({
+      status: 400,
+      message: `Missing cart ID in request – cannot fetch cart for ${global.user?.username || "guest"}`,
+    });
   }
 
   console.log(cartId);
@@ -30,9 +35,17 @@ router.get("/:cartId", async (req, res, next) => {
       return sum + item.price * item.qty;
     }, 0);
 
-    return res.status(200).json({ success: true, message: `Fetched cart for ${global.user?.username || "guest"}`, cart, totalPrice });
+    return res.status(200).json({
+      success: true,
+      message: `Fetched cart for ${global.user?.username || "guest"}`,
+      cart,
+      totalPrice,
+    });
   } else {
-    return next({ status: 404, message: `No cart found for ${global.user?.username || "guest"}` });
+    return next({
+      status: 404,
+      message: `No cart found for ${global.user?.username || "guest"}`,
+    });
   }
 });
 
@@ -41,20 +54,10 @@ router.get("/:cartId", async (req, res, next) => {
 // or Adds the item to the cart if we have a cart from before
 // If its a guest we create a new cart if teh guests sends in its guestId in hte body
 // But if no guestId is sent with the PUT we create a new cart and guest with new id:s for both and send this back
-router.put("/", async (req, res, next) => {
-  if (!req.body) {
-    return next ({status: 400, message: "No request body provided" });
-  }
-
+router.put("/", validateProductBody, async (req, res, next) => {
+  const { prodId, qty } = req.body;
+  const product = await getProduct(prodId);
   if (global.user) {
-    const { prodId, qty } = req.body;
-    if (!prodId || typeof qty !== "number") {
-      return next({ status: 400, message: "prodId and qty are required" });
-    }
-    const product = await getProduct(prodId);
-    if (!product) {
-      return next({ status: 404, message: "Product not found" });
-    }
     const result = await updateCart(global.user.userId, {
       prodId: prodId,
       price: product.price,
@@ -63,13 +66,6 @@ router.put("/", async (req, res, next) => {
     return res.status(201).json({ success: true, cart: result });
   } else {
     let { guestId, prodId, qty } = req.body;
-    if (!prodId || typeof qty !== "number") {
-      return next({ status: 404, message: "prodId and qty are required" });
-    }
-    const product = await getProduct(prodId);
-    if (!product) {
-      return next({ status: 404, message: "prodId and qty are required" });
-    }
     // Om det inte finns något guestId medskickat i body - skapa ett!
     if (!guestId) {
       guestId = `guest-${uuid().substring(0, 5)}`;
@@ -83,23 +79,14 @@ router.put("/", async (req, res, next) => {
   }
 });
 
-router.get("/:userId/campaign", async (req, res, next) => {
+router.get("/:userId/campaign", validateUserId, async (req, res, next) => {
   const userId = req.params.userId;
 
-  if (!userId) {
-    return next({ status: 400, message: "Missing user ID in request" });
-  }
-
-  try {
-    const result = await campaignCartFree(userId);
-    if (result) {
-      return res.status(200).json({ success: true, message: `Campaign applied for user ${userId}`, cart: result });
-    } else {
-      return next({ status: 404, message: `No cart found for user ${userId}` });
-    }
-  } catch (error) {
-    console.error(error.message);
-    next(error);
+  const result = await campaignCartFree(userId);
+  if (result) {
+    return res.status(200).json({ success: true, message: `Campaign applied for user ${userId}`, cart: result });
+  } else {
+    return next({ status: 404, message: `No cart found for user ${userId}` });
   }
 });
 

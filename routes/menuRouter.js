@@ -1,5 +1,7 @@
 import express from "express";
 import Product from "../models/product.js";
+import express from "express";
+import Product from "../models/product.js";
 
 const router = express.Router();
 
@@ -8,9 +10,9 @@ router.get("/", async (req, res, next) => {
   const menu = await Product.find();
   if (menu && menu.length > 0) {
     console.log("Menu loaded successfully");
-    res.json({ success: true, message: `Found menu`, menu });
+    return res.status(200).json({ success: true, message: `Found menu`, menu: menu });
   } else {
-    next({ status: 400, message: "No menu found" });
+    return next({ status: 400, message: `No menu found` });
   }
 });
 
