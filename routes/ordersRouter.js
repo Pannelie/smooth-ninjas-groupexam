@@ -10,6 +10,7 @@ import { fallbackService } from '../services/fallbackService.js';
 
 const router = express.Router();
 
+//GET all orders
 router.get('/', async (req, res, next) => {
 	const result = await getAllOrders();
 	if (result) {
@@ -19,7 +20,7 @@ router.get('/', async (req, res, next) => {
 	}
 });
 
-// this creates a order from a cart
+// Create order by cartId
 router.post('/', validateCartId, async (req, res, next) => {
 	const { cartId } = req.body;
 
@@ -33,6 +34,7 @@ router.post('/', validateCartId, async (req, res, next) => {
 	}
 });
 
+//GET orders by userId
 router.get('/:userId', validateUserId, async (req, res, next) => {
 	const { userId } = req.params;
 

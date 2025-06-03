@@ -22,7 +22,7 @@ router.get('/', async (req, res, next) => {
 	}
 });
 
-// GET cart by cartId, ändra cartId så de heter cart-xxxxx? kan baseras på userId-xxxxx med substring förslagsvis
+// GET cart by cartId
 router.get('/:cartId', async (req, res, next) => {
 	const cartId = req.params.cartId;
 
@@ -57,11 +57,7 @@ router.get('/:cartId', async (req, res, next) => {
 	}
 });
 
-// PUT /api/cart
-// -  Creates a new cart if we have a logged in user without a cart.
-// or Adds the item to the cart if we have a cart from before
-// If its a guest we create a new cart if teh guests sends in its guestId in hte body
-// But if no guestId is sent with the PUT we create a new cart and guest with new id:s for both and send this back
+// Uppdate cart
 router.put('/', validateProductBody, async (req, res, next) => {
 	const { prodId, qty } = req.body;
 	const product = await getProduct(prodId);
@@ -78,15 +74,9 @@ router.put('/', validateProductBody, async (req, res, next) => {
 		});
 		return res.status(201).json({ success: true, cart: result });
 	}
-	//-----------Annelie kommenterar ut:
-	// ----------behöver inte else eftersom vi returnerar success om global.user,
-	// ----------annars går vi inte in i den funktionen alls
-	// else {
-	// let { guestId, prodId, qty } = req.body;
-	//behöver inte be om prodId och qty igen(?)
 
 	let { guestId } = req.body;
-	// Om det inte finns något guestId medskickat i body - skapa ett!
+
 	if (!guestId) {
 		guestId = `guest-${uuid().substring(0, 5)}`;
 	} else {
@@ -110,6 +100,7 @@ router.put('/', validateProductBody, async (req, res, next) => {
 		.json({ success: true, guestId: guestId, cart: result });
 });
 
+// Get campaign
 router.get('/:userId/campaign', validateUserId, async (req, res, next) => {
 	const userId = req.params.userId;
 

@@ -31,7 +31,7 @@ app.use((req, res, next) => {
 	next({ status: 404, message: `Route '${req.originalUrl}' not found` });
 });
 
-//
+//DB EmitEvents
 database.on('error', (error) => console.log(error));
 database.once('connected', () => {
 	console.log('DB Connected');

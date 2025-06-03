@@ -4,7 +4,7 @@ import { fallbackService } from '../services/fallbackService.js';
 
 const router = express.Router();
 
-// GET product to menu
+// GET products to menu
 router.get('/', async (req, res, next) => {
 	const menu = await Product.find();
 	if (menu && menu.length > 0) {
