@@ -9,6 +9,7 @@ import {
 import { v4 as uuid } from 'uuid';
 import { validateProductBody } from '../middlewares/validators.js';
 import { validateUserId } from '../middlewares/validators.js';
+import { fallbackService } from '../services/fallbackService.js';
 
 const router = express.Router();
 
@@ -126,5 +127,8 @@ router.get('/:userId/campaign', validateUserId, async (req, res, next) => {
 		});
 	}
 });
+
+// ==== FALLBACK ====
+router.use(fallbackService);
 
 export default router;

@@ -6,6 +6,7 @@ import {
 } from '../services/ordersServices.js';
 import { emptyCartById } from '../services/cartServices.js';
 import { validateCartId, validateUserId } from '../middlewares/validators.js';
+import { fallbackService } from '../services/fallbackService.js';
 
 const router = express.Router();
 
@@ -45,5 +46,8 @@ router.get('/:userId', validateUserId, async (req, res, next) => {
 		});
 	}
 });
+
+// ==== FALLBACK ====
+router.use(fallbackService);
 
 export default router;
