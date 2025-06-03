@@ -4,7 +4,7 @@ import {
 	getAllOrders,
 	getOrderByUserId,
 } from '../services/ordersServices.js';
-import { removeCartById } from '../services/cartServices.js';
+import { emptyCartById } from '../services/cartServices.js';
 import { validateCartId, validateUserId } from '../middlewares/validators.js';
 
 const router = express.Router();
@@ -24,8 +24,8 @@ router.post('/', validateCartId, async (req, res, next) => {
 
 	const order = await createOrder(cartId);
 	if (order) {
-		await removeCartById(cartId);
-		console.log(`Order created by user:${cartId}, their cart is removed`);
+		await emptyCartById(cartId);
+		console.log(`Order created by user:${cartId}, their cart is emptied`);
 		return res.status(201).json({ success: true, order });
 	} else {
 		return next({ status: 400, message: `Order could not be created` });
