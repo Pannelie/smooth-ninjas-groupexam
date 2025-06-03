@@ -70,9 +70,12 @@ export async function updateCart(userId, product) {
 	}
 }
 
-export async function removeCartById(cartId) {
+export async function emptyCartById(cartId) {
 	try {
-		const result = Cart.findOneAndDelete({ cartId: cartId });
+		const result = await Cart.findOneAndUpdate(
+			{ cartId: cartId },
+			{ $set: { items: [] } }
+		);
 		return result;
 	} catch (error) {
 		console.log(error.message);

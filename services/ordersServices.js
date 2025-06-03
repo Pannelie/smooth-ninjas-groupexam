@@ -13,7 +13,12 @@ export async function createOrder(cartId) {
 			return sum + item.price * item.qty;
 		}, 0);
 
-		const userId = cartId.replace(/^cart-/, 'user-');
+		let userId = null;
+		if (global.user) {
+			userId = cartId.replace(/^cart-/, 'user-');
+		} else {
+			userId = cartId.replace(/^cart-/, 'guest-');
+		}
 
 		console.log(totalPrice);
 
