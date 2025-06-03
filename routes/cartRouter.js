@@ -7,7 +7,7 @@ import { validateUserId } from "../middlewares/validators.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   const result = await getAllCarts();
   if (result) {
     return res.status(200).json({ success: true, carts: result });
@@ -57,6 +57,11 @@ router.get("/:cartId", async (req, res, next) => {
 router.put("/", validateProductBody, async (req, res, next) => {
   const { prodId, qty } = req.body;
   const product = await getProduct(prodId);
+
+  if (!product) {
+    return next({ status: 400, message: `Products not found` });
+  }
+
   if (global.user) {
     const result = await updateCart(global.user.userId, {
       prodId: prodId,
@@ -64,19 +69,25 @@ router.put("/", validateProductBody, async (req, res, next) => {
       qty: qty,
     });
     return res.status(201).json({ success: true, cart: result });
-  } else {
-    let { guestId, prodId, qty } = req.body;
-    // Om det inte finns något guestId medskickat i body - skapa ett!
-    if (!guestId) {
-      guestId = `guest-${uuid().substring(0, 5)}`;
-    }
-    const result = await updateCart(guestId, {
-      prodId: prodId,
-      price: product.price,
-      qty: qty,
-    });
-    return res.status(201).json({ success: true, guestId: guestId, cart: result });
   }
+  //-----------Annelie kommenterar ut:
+  // ----------behöver inte else eftersom vi returnerar success om global.user,
+  // ----------annars går vi inte in i den funktionen alls
+  // else {
+  // let { guestId, prodId, qty } = req.body;
+  //behöver inte be om prodId och qty igen(?)
+
+  let { guestId } = req.body;
+  // Om det inte finns något guestId medskickat i body - skapa ett!
+  if (!guestId) {
+    guestId = `guest-${uuid().substring(0, 5)}`;
+  }
+  const result = await updateCart(guestId, {
+    prodId: prodId,
+    price: product.price,
+    qty: qty,
+  });
+  return res.status(201).json({ success: true, guestId: guestId, cart: result });
 });
 
 router.get("/:userId/campaign", validateUserId, async (req, res, next) => {
