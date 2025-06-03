@@ -14,6 +14,7 @@ const orderSchema = new Schema(
 		userId: { type: String, required: true },
 		orderId: { type: String, required: true },
 		items: [orderItemSchema],
+		totalPrice: { type: Number, required: true },
 	},
 	{ timestamps: true }
 );

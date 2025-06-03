@@ -9,12 +9,19 @@ export async function createOrder(cartId) {
 			throw new Error('Cart not found or empty');
 		}
 
+		const totalPrice = cart.items.reduce((sum, item) => {
+			return sum + item.price * item.qty;
+		}, 0);
+
 		const userId = cartId.replace(/^cart-/, 'user-');
+
+		console.log(totalPrice);
 
 		const order = await Order.create({
 			userId: userId,
 			orderId: generateOrderId(),
 			items: cart.items,
+			totalPrice: totalPrice,
 		});
 
 		return order;
